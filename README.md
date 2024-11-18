@@ -6,7 +6,7 @@ Hacked on [Sundai](https://sundai.club/), Nov 17, 2024 as [Cotton Project](https
 
 # Getting Started
 
-1. Build screenpipe CLI as described in https://docs.screenpi.pe/docs/getting-started
+1. Build screenpipe CLI as described in https://docs.screenpi.pe/docs/getting-started:
 
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path
@@ -18,7 +18,7 @@ cargo build --release --features metal
 ./target/release/screenpipe # <-- this runs fresh screenpipe
 ```
 
-2. [OPTIONAL] Build screenpipe FRONTEND as described in https://docs.screenpi.pe/docs/getting-started
+2. [OPTIONAL] Build screenpipe FRONTEND as described in https://docs.screenpi.pe/docs/getting-started:
 
 ```
 cd screenpipe-app-tauri
@@ -27,9 +27,10 @@ bun scripts/pre_build.js # <- this is important to copy the CLI into the app
 bun tauri build
 ```
 
-3. Install ollama https://ollama.com/download
+3. Install ollama https://ollama.com/download.
 
-4. Download this particular llama3.2 model: `ollama run llama3.2:3b-instruct-q4_K_M` https://ollama.com/library/llama3.2:3b-instruct-q4_K_M
+4. Download this particular llama3.2 model: `ollama run llama3.2:3b-instruct-q4_K_M`  
+https://ollama.com/library/llama3.2:3b-instruct-q4_K_M
 
 5. Set OPENAI_API_KEY envoronment variable:
 ```
@@ -45,8 +46,10 @@ screenpipe pipe download https://github.com/sundai-club/pyramid/tree/main/pyrami
 screenpipe pipe enable pyramid
 ```
 
-7. Run screenpipeL
+7. Run screenpipe:
 
 ```
-screenpipe
+screenpipe --disable-vision --disable-audio
 ```
+
+(ignore `pyramid` errors about "http://localhost:11435/inbox")
