@@ -49,7 +49,7 @@ screenpipe pipe enable pyramid
 7. Run screenpipe:
 
 ```
-screenpipe --disable-vision --disable-audio
+screenpipe --disable-audio
 ```
 
 (ignore `pyramid` errors about "http://localhost:11435/inbox")
