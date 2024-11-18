@@ -8,9 +8,10 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { pipe, ContentItem } from "@screenpipe/js";
 
 const engineeringLog = z.object({
-  title: z.string(),
-  description: z.string(),
-  tags: z.array(z.string()),
+  platform: z.string(),
+  identifier: z.string(),
+  timestamp: z.string(),
+  content: z.string(),
 });
 
 type EngineeringLog = z.infer<typeof engineeringLog>;
@@ -33,25 +34,46 @@ async function generateEngineeringLog(
   //   }
   //   Provide 1-3 relevant tags related to the engineering work.`;
   console.log("screen data:", JSON.stringify(screenData, null, 2));
-  const prompt = `Based on the following screen data, analyze and summarize messaging conversations:
-
+  const prompt = `You are provided with screen data extracted from various applications:
+  <screen_data>
   ${JSON.stringify(screenData)}
-
-  Focus on messages from any messaging apps (Slack, Discord, WhatsApp, Telegram, iMessage, etc.).
-  Group messages by conversation/person and provide context.
-  Return a JSON object with the following structure:
+  </screen_data>
+  
+  Your task is to extract ONLY the most recent three messages from WhatsApp and Discord conversations. Ignore all other applications and content.
+  
+  For each message found, generate a JSON object with this structure:
+  
   {
-      "title": "Conversation with [Person/Group Name]",
-      "description": "Summary of the conversation including key points, decisions, or action items. Include relevant context about the discussion topics.",
-      "tags": ["platform:app_name", "type:topic", "context:additional_info"]
+    "platform": "whatsapp|discord",
+    "identifier": "Contact name or phone number",
+    "timestamp": "ISO timestamp of the message",
+    "content": "The actual message content"
   }
   
-  For tags:
-  - First tag should be the platform (e.g., "platform:slack", "platform:discord")
-  - Second tag should be the type of conversation (e.g., "type:work", "type:personal", "type:project")
-  - Third tag can be contextual (e.g., "context:meeting-followup", "context:project-discussion")
+  **Important Rules**:
+  - Only process WhatsApp and Discord messages
+  - Only capture the most recent message from each conversation
+  - For WhatsApp, use phone numbers as identifier when available
+  - For Discord, use the username/handle as identifier
+  - Ensure timestamps are in ISO format
+  - Exclude any non-messaging content
   
-  Ignore non-messaging content. Focus on extracting meaningful conversation threads.`;
+  **Example Output**:
+  [
+    {
+      "platform": "whatsapp",
+      "identifier": "+1234567890",
+      "timestamp": "2024-03-21T15:30:00Z",
+      "content": "See you tomorrow at the meeting"
+    },
+    {
+      "platform": "discord",
+      "identifier": "user#1234",
+      "timestamp": "2024-03-21T15:31:00Z",
+      "content": "I'll be there!"
+    }
+ ]
+  Analyze the screen data and provide only the most recent messages matching these criteria.`;
 
   // const provider = createOllama({ baseURL: ollamaApiUrl });
   const provider = createOpenAI({
@@ -118,18 +140,12 @@ async function writeLogToMarkdown(logEntry: EngineeringLog): Promise<void> {
     // Create directory if it doesn't exist
     await fs.mkdir(outputDir, { recursive: true });
 
-    const markdownContent = `
-## ${logEntry.title}
-
-${logEntry.description}
-
-**Tags:** ${logEntry.tags.join(", ")}
-
----
-`;
+    const jsonContent = JSON.stringify(logEntry, null, 2);
+    const content = `\n${jsonContent}\n\n---\n`;
 
     // Append to file
-    await fs.appendFile(filePath, markdownContent, "utf-8");
+    await fs.appendFile(filePath, content, "utf-8");
+
     console.log("engineering log written to markdown file:", filePath);
 
     await pipe.inbox.send({
