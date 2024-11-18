@@ -2,6 +2,8 @@
 
 This is a custom pipe for https://github.com/mediar-ai/screenpipe which monitors your social messagers activity 👁️👁️👁️
 
+Hacked on [Sundai](https://sundai.club/), Nov 17, 2024 as [Cotton Project](https://v2.sundai.club/projects/578d7928-03db-4165-8edd-8063e621388e).
+
 # Getting Started
 
 1. Build screenpipe CLI as described in https://docs.screenpi.pe/docs/getting-started
@@ -37,8 +39,8 @@ export OPENAI_API_KEY=...
 6. Install pipe to screenpipe:
 
 ```
-git clone git@github.com:sundai-club/pyramid.git
-# screenpipe pipe download https://github.com/sundai-club/pyramid/ # <-- not sure why it's not working this way
+# git clone git@github.com:sundai-club/pyramid.git # <-- no need to do this
+screenpipe pipe download https://github.com/sundai-club/pyramid/tree/main/pyramid
 screenpipe pipe download pyramid
 screenpipe pipe enable pyramid
 ```
