@@ -40,8 +40,8 @@ export OPENAI_API_KEY=...
 
 ```
 # git clone git@github.com:sundai-club/pyramid.git # <-- no need to do this
+# screenpipe pipe download pyramid # <-- no need to do this
 screenpipe pipe download https://github.com/sundai-club/pyramid/tree/main/pyramid
-screenpipe pipe download pyramid
 screenpipe pipe enable pyramid
 ```
 
